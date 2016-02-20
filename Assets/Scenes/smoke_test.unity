@@ -85,24 +85,10 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &41861067
+--- !u!1 &41861067 stripped
 GameObject:
-  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100000, guid: 6d9673c1bf99a50449ad419b19866ec0, type: 3}
   m_PrefabInternal: {fileID: 1037703407}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1037703408}
-  - 33: {fileID: 41861070}
-  - 23: {fileID: 41861069}
-  - 114: {fileID: 41861068}
-  m_Layer: 0
-  m_Name: Boid Actor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!114 &41861068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,41 +101,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VisibilityRadius: 10
---- !u!23 &41861069
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 2300000, guid: 6d9673c1bf99a50449ad419b19866ec0,
-    type: 3}
-  m_PrefabInternal: {fileID: 1037703407}
-  m_GameObject: {fileID: 41861067}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_Materials:
-  - {fileID: 2100000, guid: b9ba2e87e0dfa9d4c94a79268948ff22, type: 2}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
-  m_ReflectionProbeUsage: 1
-  m_ProbeAnchor: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
---- !u!33 &41861070
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 3300000, guid: 6d9673c1bf99a50449ad419b19866ec0,
-    type: 3}
-  m_PrefabInternal: {fileID: 1037703407}
-  m_GameObject: {fileID: 41861067}
-  m_Mesh: {fileID: 4300000, guid: 6d9673c1bf99a50449ad419b19866ec0, type: 3}
 --- !u!1 &655273989
 GameObject:
   m_ObjectHideFlags: 0
@@ -251,11 +202,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0911efae849f3874bab84444784c499b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AngleSamplingWindowSeconds: 0.05
-  ActualHeadMinAngularVelocity: 1
-  ActualHeadMaxAngularVelocity: 5
-  RecenteringEffectMinAngularVelocity: 0
-  RecenteringEffectMaxAngularVelocity: 60
+  AngleSamplingWindowSeconds: 0.02
+  ActualHeadAngularVelocityMin: 1
+  ActualHeadAngularVelocityMax: 5
+  RecenteringEffectAngularVelocityMin: 10
+  RecenteringEffectAngularVelocityMax: 30
   GimbalGoalLocalOrientation: {x: 0, y: 0, z: 0, w: 1}
 --- !u!1 &901724400
 GameObject:
@@ -366,20 +317,11 @@ Prefab:
     - {fileID: 6400000, guid: 6d9673c1bf99a50449ad419b19866ec0, type: 3}
     - {fileID: 9500000, guid: 6d9673c1bf99a50449ad419b19866ec0, type: 3}
   m_ParentPrefab: {fileID: 100100000, guid: 6d9673c1bf99a50449ad419b19866ec0, type: 3}
-  m_RootGameObject: {fileID: 41861067}
   m_IsPrefabParent: 0
---- !u!4 &1037703408
+--- !u!4 &1037703408 stripped
 Transform:
-  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400000, guid: 6d9673c1bf99a50449ad419b19866ec0, type: 3}
   m_PrefabInternal: {fileID: 1037703407}
-  m_GameObject: {fileID: 41861067}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 0.4, z: 1}
-  m_Children: []
-  m_Father: {fileID: 901724401}
-  m_RootOrder: 0
 --- !u!1 &1946460910
 GameObject:
   m_ObjectHideFlags: 0
