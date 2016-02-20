@@ -3,13 +3,13 @@ using System.Collections;
 
 public class RecenteringGimbal : MonoBehaviour
 {
-	public float AngleSamplingWindowSeconds = 0.05f;
+	public float AngleSamplingWindowSeconds = 0.02f;
 
-	public float ActualHeadMinAngularVelocity = 1.0f;
-	public float ActualHeadMaxAngularVelocity = 5.0f;
+	public float ActualHeadAngularVelocityMin = 1.0f;
+	public float ActualHeadAngularVelocityMax = 5.0f;
 
-	public float RecenteringEffectMinAngularVelocity = 10.0f;
-	public float RecenteringEffectMaxAngularVelocity = 30.0f;
+	public float RecenteringEffectAngularVelocityMin = 10.0f;
+	public float RecenteringEffectAngularVelocityMax = 30.0f;
 
 	public Quaternion GimbalGoalLocalOrientation = Quaternion.identity;
 
@@ -37,18 +37,23 @@ public class RecenteringGimbal : MonoBehaviour
 					degreesFromLastKnownHeadOrientation, 
 					(Time.deltaTime / AngleSamplingWindowSeconds));
 
-			if (averageActualHeadAngularVelocity > ActualHeadMinAngularVelocity)
+			if (Input.GetButton("Debug Head Whip"))
+			{
+				averageActualHeadAngularVelocity = ActualHeadAngularVelocityMax;
+			}
+
+			if (averageActualHeadAngularVelocity > ActualHeadAngularVelocityMin)
 			{
 				float currentRecenteringEffectFraction = 
 					Mathf.Clamp01(Mathf.InverseLerp(
-						ActualHeadMinAngularVelocity, 
-						ActualHeadMaxAngularVelocity, 
+						ActualHeadAngularVelocityMin, 
+						ActualHeadAngularVelocityMax, 
 						averageActualHeadAngularVelocity));
 				
 				float currentRecenteringEffectAngularVelocity=
 					Mathf.Lerp(
-						RecenteringEffectMinAngularVelocity,
-						RecenteringEffectMaxAngularVelocity,
+						RecenteringEffectAngularVelocityMin,
+						RecenteringEffectAngularVelocityMax,
 						currentRecenteringEffectFraction);
 
 				// Rotate the gimbal towards wherever our parent has indicated "forward" resides.

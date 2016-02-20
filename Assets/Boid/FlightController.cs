@@ -5,6 +5,8 @@ public class FlightController : MonoBehaviour
 {
 	public float MaxDegreesPerSecond = 60.0f;
 
+	public static float GimbalLockDeadzoneDegrees = 30.0f; // Within this cone, we consider ourselves to be gimbal-locked, making it difficult to make horizon-related decisions.
+
 	public void Start ()
 	{
 	
@@ -45,7 +47,16 @@ public class FlightController : MonoBehaviour
 				{
 					cameraGimbal.transform.position = boidActor.transform.TransformPoint(cameraPositionInActorSpace.Value);
 
-					cameraGimbal.GimbalGoalLocalOrientation = boidActor.transform.localRotation;
+					// To avoid discomfort, lock the gimbal-goals to the horizon.
+					Vector3 horizontalActorHeading =
+						Vector3.ProjectOnPlane(
+							(boidActor.transform.localRotation * Vector3.forward),
+							Vector3.up);
+
+					if (horizontalActorHeading.sqrMagnitude >= Mathf.Pow(Mathf.Sin(GimbalLockDeadzoneDegrees * Mathf.Deg2Rad), 2))
+					{
+						cameraGimbal.GimbalGoalLocalOrientation = Quaternion.LookRotation(horizontalActorHeading, Vector3.up);
+					}
 				}
 			}
 
