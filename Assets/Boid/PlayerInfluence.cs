@@ -9,7 +9,7 @@ public class PlayerInfluence : MonoBehaviour
 	
 	public void Update ()
 	{
-		// TODO Relocate the camera-recenter logic to global host. Also make the inputs bindable.
+		// TODO Move the camera-recenter logic into a global script.
 		if (Input.GetButtonDown("Recenter HMD"))
 		{
 			UnityEngine.VR.InputTracking.Recenter();
