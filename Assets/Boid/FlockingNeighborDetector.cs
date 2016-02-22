@@ -27,8 +27,6 @@ public class FlockingNeighborDetector : MonoBehaviour
 		if (otherFlockingDesires != null)
 		{
 			Neighbors.Add(otherFlockingDesires);
-
-			Debug.LogFormat("object:{0} added object:{1} to the neighbor-list (count:{2}).", transform.parent.name, otherFlockingDesires.transform.name, Neighbors.Count);
 		}
 	}
 
@@ -40,8 +38,6 @@ public class FlockingNeighborDetector : MonoBehaviour
 		if (otherFlockingDesires != null)
 		{
 			Neighbors.Remove(otherFlockingDesires);
-
-			Debug.LogFormat("object:{0} removed object:{1} from the neighbor-list (count:{2}).", transform.parent.name, otherFlockingDesires.transform.name, Neighbors.Count);
 		}
 	}
 }
