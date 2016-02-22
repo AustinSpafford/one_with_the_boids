@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 public class FlockingDesires : MonoBehaviour
 {
-	public float VisibilityRadius = 10.0f;
-
 	public void Start ()
 	{
 		// Our creation has invalidated the global flocker's list.
@@ -48,8 +46,6 @@ public class FlockingDesires : MonoBehaviour
 	private int cacheConditionFrameIndex = -1;
 	private Quaternion cachedDesiredOrientation = Quaternion.identity;
 	private float cachedDesiredSpeed = 0.0f;
-
-	private List<FlockingDesires> neighbors = new List<FlockingDesires>();
 
 	private void UpdateCache ()
 	{
