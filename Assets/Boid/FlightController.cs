@@ -4,6 +4,8 @@ using System.Collections;
 public class FlightController : MonoBehaviour
 {
 	public float RotationMotionSeconds = 1.0f;
+	
+	public float CurrentSpeed { get; private set; }
 
 	public void Start ()
 	{
@@ -14,6 +16,9 @@ public class FlightController : MonoBehaviour
 		Quaternion desiredOrientation;
 		float desiredSpeed;
 		GetDesires(out desiredOrientation, out desiredSpeed);
+
+		// TODO Accelerate/decelerate instead of just snapping to the desired speed.
+		CurrentSpeed = desiredSpeed;
 
 		// Rotate towards the desire.
 		{

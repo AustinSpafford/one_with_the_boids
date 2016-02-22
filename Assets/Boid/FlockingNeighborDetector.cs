@@ -6,9 +6,16 @@ public class FlockingNeighborDetector : MonoBehaviour
 {
 	public List<FlockingDesires> Neighbors { get; private set; }
 
+	public float VisionRadius
+	{
+		get { return triggerCollider.radius; }
+	}
+
 	public void Awake ()
 	{
 		Neighbors = new List<FlockingDesires>();
+
+		triggerCollider = GetComponent<SphereCollider>();
 	}
 
 	public void Start ()
@@ -40,4 +47,6 @@ public class FlockingNeighborDetector : MonoBehaviour
 			Neighbors.Remove(otherFlockingDesires);
 		}
 	}
+
+	private SphereCollider triggerCollider = null;
 }

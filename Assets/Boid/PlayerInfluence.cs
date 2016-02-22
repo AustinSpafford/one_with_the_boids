@@ -3,6 +3,9 @@ using System.Collections;
 
 public class PlayerInfluence : MonoBehaviour
 {
+	public float ForwardThrottleDesiredSpeed = 5.0f;
+	public float ReverseThrottleDesiredSpeed = 0.0f;
+
 	public void Start ()
 	{
 	}
@@ -18,9 +21,9 @@ public class PlayerInfluence : MonoBehaviour
 
 	public float GetInfluenceFraction ()
 	{
-		float inputVerticalAxis = Input.GetAxis("Throttle");
+		float inputThrottle = Input.GetAxis("Throttle");
 		
-		return Mathf.Clamp01(inputVerticalAxis);
+		return Mathf.Clamp01(Mathf.Abs(inputThrottle));
 	}
 
 	public Quaternion BuildDesiredOrientation ()
@@ -39,6 +42,17 @@ public class PlayerInfluence : MonoBehaviour
 
 	public float GetDesiredSpeed ()
 	{
-		return 3.0f;
+		float desiredSpeed = 0.0f;
+		
+		if (Input.GetAxis("Throttle") >= 0)
+		{
+			desiredSpeed = ForwardThrottleDesiredSpeed;
+		}
+		else
+		{
+			desiredSpeed = ReverseThrottleDesiredSpeed;
+		}
+
+		return desiredSpeed;
 	}
 }
