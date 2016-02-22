@@ -122,6 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a41b0f447146ebe44b231728350f8b72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NeighborFullVisibilityDistanceFraction: 0.8
 --- !u!114 &11459088
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -133,9 +134,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 316eb3d1679591b44a15943e257fa145, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AvoidanceBaseDistance: 3
+  AvoidanceBaseSpeed: 3
+  AvoidanceMaxSpeed: 20
+  CohesionMaxSpeed: 3
+  CohesionSatisfactionFalloffDistance: 2
   IdlingLocalOrientation: {x: 0, y: 0, z: 0, w: 1}
   IdlingSpeed: 2
-  OrientationMatchingPeakDistanceRatio: 0.75
 --- !u!114 &11484780
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -178,7 +183,27 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: CohesionMaxSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: AvoidanceMaxSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Radius
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: AvoidanceBaseDistance
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: RotationMotionSeconds
+      value: 0.4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 189088}
