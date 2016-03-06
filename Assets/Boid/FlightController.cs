@@ -3,67 +3,58 @@ using System.Collections;
 
 public class FlightController : MonoBehaviour
 {
-	public float MaxDegreesPerSecond = 60.0f;
-
-	public static float GimbalLockDeadzoneDegrees = 30.0f; // Within this cone, we consider ourselves to be gimbal-locked, making it difficult to make horizon-related decisions.
+	public float RotationMotionSeconds = 1.0f;
+	
+	public float CurrentSpeed { get; private set; }
 
 	public void Start ()
 	{
-	
 	}
 	
 	public void Update ()
 	{
-		var boidActor = transform.Find("Boid Actor");
+		Quaternion desiredOrientation;
+		float desiredSpeed;
+		GetDesires(out desiredOrientation, out desiredSpeed);
 
-		if (boidActor != null)
+		// TODO Accelerate/decelerate instead of just snapping to the desired speed.
+		CurrentSpeed = desiredSpeed;
+
+		// Rotate towards the desire.
 		{
-			Quaternion desiredOrientation;
-			float desiredSpeed;
-			GetDesires(out desiredOrientation, out desiredSpeed);
+			float oldDegreesFromTarget = Quaternion.Angle(transform.rotation, desiredOrientation);
 
-			// Immediately rotate the boid actor, and set that as a rotation-goal for the camera.
+			float newDegreesFromTarget = 
+				Mathf.SmoothDamp(
+					oldDegreesFromTarget, // current
+					0.0f, // target
+					ref rotationSmoothingCurrentVelocity, // velocity
+					RotationMotionSeconds); // smoothTime
+
+			float maxRotationStepDegrees = (oldDegreesFromTarget - newDegreesFromTarget);
+
+			var oldRotation = transform.rotation;
+
+			transform.rotation = 
+				Quaternion.RotateTowards(
+					transform.rotation, 
+					desiredOrientation, 
+					maxRotationStepDegrees);
+			
+			// Let any children locally counteract this rotation (eg. to avoid motion-sickness).
+			foreach (var counterRotator in GetComponentsInChildren<CounterRotator>())
 			{
-				Vector3? cameraPositionInActorSpace = null;
-				var cameraGimbal = GetComponentInChildren<RecenteringGimbal>();
-
-				// Before applying a rotation, preserve the relative positions of any sibling cameras.
-				if (cameraGimbal != null)
-				{
-					cameraPositionInActorSpace = boidActor.transform.InverseTransformPoint(cameraGimbal.transform.position);
-				}
-
-				// TODO Use Mathf.SmoothDamp().
-				float actorRotationStepFraction = (3.0f * Time.deltaTime);
-
-				boidActor.transform.rotation = 
-					Quaternion.Slerp(
-						boidActor.transform.rotation, 
-						desiredOrientation, 
-						actorRotationStepFraction);
-				
-				// Restore the camera's position, and (as movement allows) point it in the same direction as the actor.
-				if (cameraGimbal != null)
-				{
-					cameraGimbal.transform.position = boidActor.transform.TransformPoint(cameraPositionInActorSpace.Value);
-
-					// To avoid discomfort, lock the gimbal-goals to the horizon.
-					Vector3 horizontalActorHeading =
-						Vector3.ProjectOnPlane(
-							(boidActor.transform.localRotation * Vector3.forward),
-							Vector3.up);
-
-					if (horizontalActorHeading.sqrMagnitude >= Mathf.Pow(Mathf.Sin(GimbalLockDeadzoneDegrees * Mathf.Deg2Rad), 2))
-					{
-						cameraGimbal.GimbalGoalLocalOrientation = Quaternion.LookRotation(horizontalActorHeading, Vector3.up);
-					}
-				}
+				counterRotator.OnCounteractableRotation(oldRotation, transform.rotation);
 			}
+		}
 
-			// Translate the entire root, since that will keep the actor and camera in sync with each other.
-			transform.position += (boidActor.transform.forward * Time.deltaTime * desiredSpeed);
+		// Translate forward.
+		{
+			transform.position += (transform.forward * (desiredSpeed * Time.deltaTime));
 		}
 	}
+
+	private float rotationSmoothingCurrentVelocity = 0.0f;
 
 	private void GetDesires (
 		out Quaternion desiredOrientation,
@@ -79,7 +70,7 @@ public class FlightController : MonoBehaviour
 			desiredOrientation = flockingBehavior.DesiredOrientation;
 			desiredSpeed = flockingBehavior.DesiredSpeed;
 
-			var playerInfluence = GetComponent<PlayerInfluence>();
+			var playerInfluence = GetComponentInChildren<PlayerInfluence>();
 
 			if (playerInfluence != null)
 			{
