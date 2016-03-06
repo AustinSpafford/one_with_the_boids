@@ -9,6 +9,7 @@ public class FlightController : MonoBehaviour
 
 	public void Start ()
 	{
+		CurrentSpeed = 0.0f;
 	}
 	
 	public void Update ()
@@ -50,7 +51,7 @@ public class FlightController : MonoBehaviour
 
 		// Translate forward.
 		{
-			transform.position += (transform.forward * (desiredSpeed * Time.deltaTime));
+			transform.position += (transform.forward * (CurrentSpeed * Time.deltaTime));
 		}
 	}
 

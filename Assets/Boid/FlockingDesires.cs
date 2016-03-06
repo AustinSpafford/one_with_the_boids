@@ -5,6 +5,9 @@ using System.Collections.Generic;
 public class FlockingDesires : MonoBehaviour
 {
 	public float AvoidanceBaseDistance = 3.0f;
+	
+	[Tooltip("Below the random-panic-distance, we'll generate random maneuvers to get ourselves separated from anyone else sharing our position.")]
+	public float AvoidanceRandomPanicDistance = 0.1f;
 
 	[Tooltip("At the base-distance, we'll avoid collisions with this speed.")]
 	public float AvoidanceBaseSpeed = 3.0f;
@@ -19,6 +22,9 @@ public class FlockingDesires : MonoBehaviour
 
 	public Quaternion IdlingLocalOrientation = Quaternion.identity;
 	public float IdlingSpeed = 2.0f;
+
+	public bool debugLogAllDesireVectors = false;
+	public bool debugDisplayAllDesireVectors = false;
 
 	public void Start ()
 	{
@@ -79,18 +85,38 @@ public class FlockingDesires : MonoBehaviour
 
 		foreach (var neighbor in neighborDetector.Neighbors)
 		{
-			Vector3 selfToNeighborDelta = (neighbor.transform.position - transform.position);
-			float selfToNeighborDistance =  selfToNeighborDelta.magnitude;
-			Vector3 selfToNeighborDirection = (selfToNeighborDelta / Mathf.Max(selfToNeighborDistance, Mathf.Epsilon));
+			Vector3 selfToNeighborDirection = Vector3.zero;
+			float normalizedDistanceToNeighbor = 0.0f;
 
-			float normalizedDistanceToNeighbor = (selfToNeighborDistance / AvoidanceBaseDistance);
+			// Choose our direction and distance, but explicitly handling edge cases such as sharing the same
+			// position as our neighbor, which do terrible things (eg. NaN-vectors) if left unhandled.
+			{
+				Vector3 selfToNeighborDelta = (neighbor.transform.position - transform.position);
+				float selfToNeighborDistance =  selfToNeighborDelta.magnitude;
+
+				if (selfToNeighborDistance <= AvoidanceRandomPanicDistance)
+				{
+					selfToNeighborDirection = Random.onUnitSphere;
+					normalizedDistanceToNeighbor = AvoidanceRandomPanicDistance;
+				}
+				else
+				{
+					selfToNeighborDirection = (selfToNeighborDelta / selfToNeighborDistance);
+					normalizedDistanceToNeighbor = (selfToNeighborDistance / AvoidanceBaseDistance);
+				}
+			}
 			
-			float naiveNeighborAvoidanceSpeed = (AvoidanceBaseSpeed / Mathf.Max(normalizedDistanceToNeighbor, Mathf.Epsilon));
+			float neighborAvoidanceSpeed = 
+				Mathf.Min(
+					(AvoidanceBaseSpeed / normalizedDistanceToNeighbor),
+					AvoidanceMaxSpeed);
 
 			// Blend in our consideration of the neighbor so as to avoid twitching when they're first sighted.
 			float neighborConsiderationFraction = neighborDetector.GetNeighborConsiderationFraction(neighbor);
 
-			naiveNeighborhoodAvoidanceVelocity += (-1 * (neighborConsiderationFraction * naiveNeighborAvoidanceSpeed) * selfToNeighborDirection);
+			naiveNeighborhoodAvoidanceVelocity += (
+				(neighborConsiderationFraction * neighborAvoidanceSpeed) *
+				(-1 * selfToNeighborDirection));
 		}
 
 		float naiveNeighborhoodAvoidanceSpeed = naiveNeighborhoodAvoidanceVelocity.magnitude;
@@ -155,9 +181,19 @@ public class FlockingDesires : MonoBehaviour
 			idlingSpeed + 
 			orientationSpeed);
 
+		if (debugLogAllDesireVectors)
+		{
+			Debug.LogFormat(
+				"[avoidance {0}], [cohesion {1}], [idling {2}], [orientation {3}]",
+				avoidanceVelocity,
+				cohesionVelocity,
+				idlingVelocity,
+				orientationVelocity);
+		}
+
 		// To avoid having the behaviors increase our speed purely by merit of their existence, we weight each
 		// behavior by its requested speed versus the others. A single behavior is still able to request an increased
-		// overall speed, which will also wind up "drowning out" the behaviors making more minor responses.
+		// overall speed, which will also wind up smoothly "drowning out" any behaviors making relatively minor responses.
 		// Consideration: The behavior functions could return an explicit weight in addition to the velocity, which would permit requests to slow down.
 		Vector3 desiredVelocity = (
 			(avoidanceVelocity * (avoidanceSpeed / naiveTotalSpeed)) +
@@ -165,13 +201,14 @@ public class FlockingDesires : MonoBehaviour
 			(idlingVelocity * (idlingSpeed / naiveTotalSpeed)) +
 			(orientationVelocity * (orientationSpeed / naiveTotalSpeed)));
 		
-		/*
-		Debug.DrawLine(transform.position, (transform.position + avoidanceVelocity), Color.red);
-		Debug.DrawLine(transform.position, (transform.position + cohesionVelocity), Color.blue);
-		Debug.DrawLine(transform.position, (transform.position + idlingVelocity), Color.grey);
-		Debug.DrawLine(transform.position, (transform.position + orientationVelocity), Color.green);
-		Debug.DrawLine(transform.position, (transform.position + desiredVelocity), Color.white);
-		*/
+		if (debugDisplayAllDesireVectors)
+		{
+			Debug.DrawLine(transform.position, (transform.position + avoidanceVelocity), Color.red);
+			Debug.DrawLine(transform.position, (transform.position + cohesionVelocity), Color.blue);
+			Debug.DrawLine(transform.position, (transform.position + idlingVelocity), Color.grey);
+			Debug.DrawLine(transform.position, (transform.position + orientationVelocity), Color.green);
+			Debug.DrawLine(transform.position, (transform.position + desiredVelocity), Color.white);
+		}
 
 		return desiredVelocity;
 	}
