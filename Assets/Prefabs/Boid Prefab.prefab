@@ -135,12 +135,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AvoidanceBaseDistance: 3
+  AvoidanceRandomPanicDistance: 0.1
   AvoidanceBaseSpeed: 3
   AvoidanceMaxSpeed: 20
   CohesionMaxSpeed: 3
   CohesionSatisfactionFalloffDistance: 2
   IdlingLocalOrientation: {x: 0, y: 0, z: 0, w: 1}
   IdlingSpeed: 2
+  debugLogAllDesireVectors: 0
+  debugDisplayAllDesireVectors: 0
 --- !u!114 &11484780
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -203,6 +206,22 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: RotationMotionSeconds
       value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: debugLogAvoidanceDesireMath
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: debugDisplayAllDesireVectors
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: debugLogAllDesireVectors
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
