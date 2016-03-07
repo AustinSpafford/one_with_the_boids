@@ -178,6 +178,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7ada84b9d7c774cbb39030f0b0b0cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ForwardThrottleDesiredSpeed: 10
+  ReverseThrottleDesiredSpeed: 0
 --- !u!124 &12401456
 Behaviour:
   m_ObjectHideFlags: 1
@@ -191,7 +193,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: ForwardThrottleDesiredSpeed
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 186310}
