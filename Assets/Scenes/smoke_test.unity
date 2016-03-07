@@ -204,7 +204,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11480126, guid: 63bb81c25fbee1546876994deba4427f, type: 2}
       propertyPath: PlacementDistanceMin
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 11480126, guid: 63bb81c25fbee1546876994deba4427f, type: 2}
       propertyPath: PlacementDistanceMax
