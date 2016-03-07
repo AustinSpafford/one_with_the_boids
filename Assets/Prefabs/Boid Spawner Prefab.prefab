@@ -134,14 +134,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BoidPrefab: {fileID: 189088, guid: 247111b45c7cd5b4895a37a6805d9b48, type: 2}
-  InitialSpawnCount: 100
-  InitialSpawnBoidsPerSecond: 25
-  SpreadHalfYawDegrees: 180
-  SpreadHalfPitchDegrees: 90
-  SpreadHalfRollDegrees: 180
-  PlacementDistanceMin: 20
-  PlacementDistanceMax: 20
-  remainingInitialBoidSpawnCount: 0
+  InitialSpawnCount: 20
+  InitialSpawnBoidsPerSecond: 10
+  SpreadHalfYawDegrees: 0
+  SpreadHalfPitchDegrees: 0
+  SpreadHalfRollDegrees: 0
+  PlacementDistanceMin: 0
+  PlacementDistanceMax: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -171,11 +170,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: InitialSpawnBoidsPerSecond
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: InitialSpawnCount
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
