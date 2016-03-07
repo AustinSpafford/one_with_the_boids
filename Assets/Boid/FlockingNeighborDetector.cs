@@ -14,6 +14,9 @@ public class FlockingNeighborDetector : MonoBehaviour
 	[Tooltip("When less than 1, neighbors on the fringe of our visibility radius will be smoothly blended into our behaviors as they reach the peak-visibility distance.")]
 	public float NeighborFullVisibilityDistanceFraction = 0.8f;
 
+	public float CacheUpdatesPerSecondMin = 5.0f;
+	public float CacheUpdatesPerSecondMax = 10.0f;
+
 	public float VisionRadius
 	{
 		get { return triggerCollider.radius; }
@@ -32,7 +35,17 @@ public class FlockingNeighborDetector : MonoBehaviour
 	
 	public void Update ()
 	{
-		cachedConsiderationFractionsAreValid = false;
+		remainingSecondsUntilScheduledCacheRebuild -= Time.deltaTime;
+
+		if (remainingSecondsUntilScheduledCacheRebuild <= 0.0f)
+		{
+			cachedConsiderationFractionsAreValid = false;
+
+			// Slightly randomize our update-schedule as a cheap/simple way to 
+			// avoid spiking perf when many boids are spawned on the same initial frame.
+			remainingSecondsUntilScheduledCacheRebuild = 
+				(1.0f / Random.Range(CacheUpdatesPerSecondMin, CacheUpdatesPerSecondMax));
+		}
 	}
 
 	public void OnTriggerEnter(
@@ -49,8 +62,10 @@ public class FlockingNeighborDetector : MonoBehaviour
 			};
 
 			neighborCollection.Add(newNeighbor.flockingDesires, newNeighbor);
-			
-			cachedConsiderationFractionsAreValid = false;
+
+			// NOTE: For total-correctness we'd immediately invalidate our cache here, but since
+			// it's harmless for the additional neighbor to be temporarily present with a
+			// rating of 0, we'll just wait until everyone gets updated.
 		}
 	}
 
@@ -62,8 +77,6 @@ public class FlockingNeighborDetector : MonoBehaviour
 		if (otherFlockingDesires != null)
 		{
 			neighborCollection.Remove(otherFlockingDesires);
-			
-			cachedConsiderationFractionsAreValid = false;
 		}
 	}
 	
@@ -79,6 +92,8 @@ public class FlockingNeighborDetector : MonoBehaviour
 	private SphereCollider triggerCollider = null;
 
 	private bool cachedConsiderationFractionsAreValid = false;
+
+	private float remainingSecondsUntilScheduledCacheRebuild = 0.0f;
 	
 	private void UpdateCache ()
 	{
@@ -86,17 +101,26 @@ public class FlockingNeighborDetector : MonoBehaviour
 		{
 			foreach (var neighbor in neighborCollection.Values)
 			{
-				float distanceToNeighborCenter =
-					Vector3.Distance(transform.position, neighbor.flockingDesires.transform.position);
+				float squaredDistanceToNeighborCenter =
+					Vector3.SqrMagnitude(neighbor.flockingDesires.transform.position - transform.position);
 
-				float distanceToNeighborSurface =
-					Mathf.Max(0.0f, (distanceToNeighborCenter - neighbor.flockingDesires.GetComponent<SphereCollider>().radius));
+				if (squaredDistanceToNeighborCenter < (NeighborFullVisibilityDistanceFraction * NeighborFullVisibilityDistanceFraction))
+				{
+					neighbor.currentConsiderationFraction = 1.0f;
+				}
+				else
+				{
+					float distanceToNeighborCenter = Mathf.Sqrt(squaredDistanceToNeighborCenter);
+
+					float distanceToNeighborSurface =
+						Mathf.Max(0.0f, (distanceToNeighborCenter - neighbor.flockingDesires.GetComponent<SphereCollider>().radius));
 		
-				neighbor.currentConsiderationFraction = 
-					Mathf.Clamp01(Mathf.InverseLerp(
-						VisionRadius, 
-						(NeighborFullVisibilityDistanceFraction * VisionRadius), 
-						distanceToNeighborSurface));
+					neighbor.currentConsiderationFraction = 
+						Mathf.Clamp01(Mathf.InverseLerp(
+							VisionRadius, 
+							(NeighborFullVisibilityDistanceFraction * VisionRadius), 
+							distanceToNeighborSurface));
+				}
 			}
 
 			cachedConsiderationFractionsAreValid = true;
