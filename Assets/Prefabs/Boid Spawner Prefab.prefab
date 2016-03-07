@@ -1,5 +1,24 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &169400
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 429876}
+  - 33: {fileID: 3309030}
+  - 23: {fileID: 2328766}
+  - 64: {fileID: 6448764}
+  - 95: {fileID: 9541190}
+  m_Layer: 0
+  m_Name: EditorOnlyVisualization
+  m_TagString: EditorOnly
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &195126
 GameObject:
   m_ObjectHideFlags: 0
@@ -25,9 +44,84 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 192.32, y: 53.06, z: 192.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 429876}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!4 &429876
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 169400}
+  m_LocalRotation: {x: -0.000000059604645, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 400436}
+  m_RootOrder: 0
+--- !u!23 &2328766
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 169400}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 6723614fa0bb2bb4fbe6f3d440c12ef7, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &3309030
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 169400}
+  m_Mesh: {fileID: 4300000, guid: 6d9673c1bf99a50449ad419b19866ec0, type: 3}
+--- !u!64 &6448764
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 169400}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 0
+  m_Mesh: {fileID: 4300000, guid: 6d9673c1bf99a50449ad419b19866ec0, type: 3}
+--- !u!95 &9541190
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 169400}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 6d9673c1bf99a50449ad419b19866ec0, type: 3}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &11480126
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -40,13 +134,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BoidPrefab: {fileID: 189088, guid: 247111b45c7cd5b4895a37a6805d9b48, type: 2}
-  InitialSpawnCount: 10
-  InitialSpawnBoidsPerSecond: 1
-  SpreadHalfYawDegrees: 0
-  SpreadHalfPitchDegrees: 0
-  SpreadHalfRollDegrees: 0
-  PlacementDistanceMin: 0
-  PlacementDistanceMax: 0
+  InitialSpawnCount: 100
+  InitialSpawnBoidsPerSecond: 25
+  SpreadHalfYawDegrees: 180
+  SpreadHalfPitchDegrees: 90
+  SpreadHalfRollDegrees: 180
+  PlacementDistanceMin: 20
+  PlacementDistanceMax: 20
   remainingInitialBoidSpawnCount: 0
 --- !u!1001 &100100000
 Prefab:
