@@ -83,15 +83,15 @@ public class FlockingDesires : MonoBehaviour
 	{
 		Vector3 naiveNeighborhoodAvoidanceVelocity = Vector3.zero;
 
-		foreach (var neighbor in neighborDetector.Neighbors)
+		foreach (var neighbor in neighborDetector.GetNeighbors())
 		{
 			Vector3 selfToNeighborDirection = Vector3.zero;
 			float normalizedDistanceToNeighbor = 0.0f;
 
 			// Choose our direction and distance, but explicitly handling edge cases such as sharing the same
-			// position as our neighbor, which do terrible things (eg. NaN-vectors) if left unhandled.
+			// position as our neighbor, which do terrible things (eg. NaN-vectors) when left unhandled.
 			{
-				Vector3 selfToNeighborDelta = (neighbor.transform.position - transform.position);
+				Vector3 selfToNeighborDelta = (neighbor.flockingDesires.transform.position - transform.position);
 				float selfToNeighborDistance =  selfToNeighborDelta.magnitude;
 
 				if (selfToNeighborDistance <= AvoidanceRandomPanicDistance)
@@ -112,10 +112,8 @@ public class FlockingDesires : MonoBehaviour
 					AvoidanceMaxSpeed);
 
 			// Blend in our consideration of the neighbor so as to avoid twitching when they're first sighted.
-			float neighborConsiderationFraction = neighborDetector.GetNeighborConsiderationFraction(neighbor);
-
 			naiveNeighborhoodAvoidanceVelocity += (
-				(neighborConsiderationFraction * neighborAvoidanceSpeed) *
+				(neighbor.currentConsiderationFraction * neighborAvoidanceSpeed) *
 				(-1 * selfToNeighborDirection));
 		}
 
@@ -134,15 +132,13 @@ public class FlockingDesires : MonoBehaviour
 		Vector3 summedSelfToNeighborDeltas = Vector3.zero;
 		float summedNeighborConsiderationFractions = 1.0f; // NOTE: We're including ourselves in the center-of-mass calculation.
 
-		foreach (var neighbor in neighborDetector.Neighbors)
+		foreach (var neighbor in neighborDetector.GetNeighbors())
 		{
-			Vector3 selfToNeighborDelta = (neighbor.transform.position - transform.position);
+			Vector3 selfToNeighborDelta = (neighbor.flockingDesires.transform.position - transform.position);
 
 			// Blend in our consideration of the neighbor so as to avoid twitching when they're first sighted.
-			float neighborConsiderationFraction = neighborDetector.GetNeighborConsiderationFraction(neighbor);
-
-			summedSelfToNeighborDeltas += (neighborConsiderationFraction * selfToNeighborDelta);
-			summedNeighborConsiderationFractions += neighborConsiderationFraction;
+			summedSelfToNeighborDeltas += (neighbor.currentConsiderationFraction * selfToNeighborDelta);
+			summedNeighborConsiderationFractions += neighbor.currentConsiderationFraction;
 		}
 
 		Vector3 selfToCenterOfMass = (summedSelfToNeighborDeltas / summedNeighborConsiderationFractions);
@@ -224,23 +220,21 @@ public class FlockingDesires : MonoBehaviour
 		Vector3 summedNeighborVelocity = Vector3.zero;
 		float summedNeighborConsiderationFractions = 0.0f;
 
-		foreach (var neighbor in neighborDetector.Neighbors)
+		foreach (var neighbor in neighborDetector.GetNeighbors())
 		{
-			var neighborFlightController = neighbor.GetComponent<FlightController>();
+			var neighborFlightController = neighbor.flockingDesires.GetComponent<FlightController>();
 
 			if (neighborFlightController != null)
 			{
 				float neighborCurrentSpeed = IdlingSpeed; // neighborFlightController.CurrentSpeed; // BUG! Boids were feeding back into each other and creating explosive velocities, so for now we can't read CurrentSpeed for this.
 
+				Vector3 neighborActualVelocity = (neighborCurrentSpeed * neighbor.flockingDesires.transform.forward);
+				
 				// Blend in our consideration of the neighbor so as to avoid twitching when they're first sighted.
-				float neighborConsiderationFraction = neighborDetector.GetNeighborConsiderationFraction(neighbor);
-
-				Vector3 neighborActualVelocity = (neighborCurrentSpeed * neighbor.transform.forward);
-
-				Vector3 neighborWeightedVelocity = (neighborConsiderationFraction * neighborActualVelocity);
+				Vector3 neighborWeightedVelocity = (neighbor.currentConsiderationFraction * neighborActualVelocity);
 
 				summedNeighborVelocity += neighborWeightedVelocity;
-				summedNeighborConsiderationFractions += neighborConsiderationFraction;
+				summedNeighborConsiderationFractions += neighbor.currentConsiderationFraction;
 			}
 		}
 

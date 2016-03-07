@@ -4,10 +4,15 @@ using System.Collections.Generic;
 
 public class FlockingNeighborDetector : MonoBehaviour
 {
+	public class NeighborInformation
+	{
+		public FlockingDesires flockingDesires;
+
+		public float currentConsiderationFraction;
+	}
+
 	[Tooltip("When less than 1, neighbors on the fringe of our visibility radius will be smoothly blended into our behaviors as they reach the peak-visibility distance.")]
 	public float NeighborFullVisibilityDistanceFraction = 0.8f;
-
-	public List<FlockingDesires> Neighbors { get; private set; }
 
 	public float VisionRadius
 	{
@@ -16,7 +21,7 @@ public class FlockingNeighborDetector : MonoBehaviour
 
 	public void Awake ()
 	{
-		Neighbors = new List<FlockingDesires>();
+		neighborCollection = new Dictionary<FlockingDesires, NeighborInformation>();
 
 		triggerCollider = GetComponent<SphereCollider>();
 	}
@@ -27,6 +32,7 @@ public class FlockingNeighborDetector : MonoBehaviour
 	
 	public void Update ()
 	{
+		cachedConsiderationFractionsAreValid = false;
 	}
 
 	public void OnTriggerEnter(
@@ -36,7 +42,15 @@ public class FlockingNeighborDetector : MonoBehaviour
 
 		if (otherFlockingDesires != null)
 		{
-			Neighbors.Add(otherFlockingDesires);
+			var newNeighbor = new NeighborInformation()
+			{
+				flockingDesires = otherFlockingDesires,
+				currentConsiderationFraction = 0.0f,
+			};
+
+			neighborCollection.Add(newNeighbor.flockingDesires, newNeighbor);
+			
+			cachedConsiderationFractionsAreValid = false;
 		}
 	}
 
@@ -47,25 +61,45 @@ public class FlockingNeighborDetector : MonoBehaviour
 
 		if (otherFlockingDesires != null)
 		{
-			Neighbors.Remove(otherFlockingDesires);
+			neighborCollection.Remove(otherFlockingDesires);
+			
+			cachedConsiderationFractionsAreValid = false;
 		}
 	}
-
-	public float GetNeighborConsiderationFraction (
-		FlockingDesires neighbor)
+	
+	public IEnumerable<NeighborInformation> GetNeighbors ()
 	{
-		float distanceToNeighborCenter = Vector3.Distance(transform.position, neighbor.transform.position);
-
-		float distanceToNeighborSurface = Mathf.Max(0, (distanceToNeighborCenter - neighbor.GetComponent<SphereCollider>().radius));
-		
-		float neighborConsiderationFraction = 
-			Mathf.Clamp01(Mathf.InverseLerp(
-				VisionRadius, 
-				(NeighborFullVisibilityDistanceFraction * VisionRadius), 
-				distanceToNeighborSurface));
-
-		return neighborConsiderationFraction;
+		UpdateCache();
+			
+		return neighborCollection.Values;
 	}
 
+	private Dictionary<FlockingDesires, NeighborInformation> neighborCollection = null;
+
 	private SphereCollider triggerCollider = null;
+
+	private bool cachedConsiderationFractionsAreValid = false;
+	
+	private void UpdateCache ()
+	{
+		if (!cachedConsiderationFractionsAreValid)
+		{
+			foreach (var neighbor in neighborCollection.Values)
+			{
+				float distanceToNeighborCenter =
+					Vector3.Distance(transform.position, neighbor.flockingDesires.transform.position);
+
+				float distanceToNeighborSurface =
+					Mathf.Max(0.0f, (distanceToNeighborCenter - neighbor.flockingDesires.GetComponent<SphereCollider>().radius));
+		
+				neighbor.currentConsiderationFraction = 
+					Mathf.Clamp01(Mathf.InverseLerp(
+						VisionRadius, 
+						(NeighborFullVisibilityDistanceFraction * VisionRadius), 
+						distanceToNeighborSurface));
+			}
+
+			cachedConsiderationFractionsAreValid = true;
+		}
+	}
 }
