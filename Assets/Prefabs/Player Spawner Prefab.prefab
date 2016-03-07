@@ -29,8 +29,8 @@ GameObject:
   - 64: {fileID: 6438942}
   - 95: {fileID: 9510620}
   m_Layer: 0
-  m_Name: SpawnMarker
-  m_TagString: Untagged
+  m_Name: EditorOnlyVisualization
+  m_TagString: EditorOnly
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -133,8 +133,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f9947979be99664589b74fd30757531, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vanillaBoidPrefab: {fileID: 189088, guid: 247111b45c7cd5b4895a37a6805d9b48, type: 2}
-  playerParasitePrefab: {fileID: 186310, guid: 04239eb1d813e4442b660943ab978016, type: 2}
+  VanillaBoidPrefab: {fileID: 189088, guid: 247111b45c7cd5b4895a37a6805d9b48, type: 2}
+  PlayerParasitePrefab: {fileID: 186310, guid: 04239eb1d813e4442b660943ab978016, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -45,7 +45,7 @@ public class BoidSpawner : MonoBehaviour
 		}
 	}
 
-	public int remainingInitialBoidSpawnCount = 0;
+	private int remainingInitialBoidSpawnCount = 0;
 	private float remainingSecondsUntilNextBoidSpawn = 0.0f;
 
 	private void SpawnBoid ()

@@ -124,14 +124,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 11496696, guid: e896e1abebf77ba4d8d0d18370c8d5bd, type: 2}
-      propertyPath: VanillaBoidPrefab
-      value: 
-      objectReference: {fileID: 189088, guid: 247111b45c7cd5b4895a37a6805d9b48, type: 2}
-    - target: {fileID: 11496696, guid: e896e1abebf77ba4d8d0d18370c8d5bd, type: 2}
-      propertyPath: PlayerParasitePrefab
-      value: 
-      objectReference: {fileID: 186310, guid: 04239eb1d813e4442b660943ab978016, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e896e1abebf77ba4d8d0d18370c8d5bd, type: 2}
   m_IsPrefabParent: 0
@@ -172,35 +164,43 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400436, guid: 63bb81c25fbee1546876994deba4427f, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328766, guid: 63bb81c25fbee1546876994deba4427f, type: 2}
+      propertyPath: m_CastShadows
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11480126, guid: 63bb81c25fbee1546876994deba4427f, type: 2}
       propertyPath: SpreadHalfYawDegrees
-      value: 180
+      value: 172.4
       objectReference: {fileID: 0}
     - target: {fileID: 11480126, guid: 63bb81c25fbee1546876994deba4427f, type: 2}
       propertyPath: SpreadHalfPitchDegrees
-      value: 90
+      value: 84.3
       objectReference: {fileID: 0}
     - target: {fileID: 11480126, guid: 63bb81c25fbee1546876994deba4427f, type: 2}
       propertyPath: SpreadHalfRollDegrees
-      value: 180
+      value: 167.1
       objectReference: {fileID: 0}
     - target: {fileID: 11480126, guid: 63bb81c25fbee1546876994deba4427f, type: 2}
       propertyPath: PlacementDistanceMin
-      value: 20
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 11480126, guid: 63bb81c25fbee1546876994deba4427f, type: 2}
       propertyPath: PlacementDistanceMax
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 11480126, guid: 63bb81c25fbee1546876994deba4427f, type: 2}
       propertyPath: InitialSpawnBoidsPerSecond
-      value: 25
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 11480126, guid: 63bb81c25fbee1546876994deba4427f, type: 2}
       propertyPath: InitialSpawnCount
-      value: 100
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 195126, guid: 63bb81c25fbee1546876994deba4427f, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 63bb81c25fbee1546876994deba4427f, type: 2}
