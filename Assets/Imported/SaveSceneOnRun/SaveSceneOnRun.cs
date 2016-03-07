@@ -1,7 +1,10 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+
+using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -33,3 +36,5 @@ public class OnUnityLoad
 		}
 	}
 }
+
+#endif // #if UNITY_EDITOR
